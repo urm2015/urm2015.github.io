@@ -1,4 +1,3 @@
-a { color: #12C; }
 a:visited { color: #61C; }
 a:focus { outline: thin dotted; }
 a:hover, a:active { color: #c00; outline: 0; }
