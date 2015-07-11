@@ -428,23 +428,24 @@ var resizePizzas = function(size) {
       switch(size) {
         case "1":
           newWidth = 25;
-          //document.querySelector("#pizzaSize").innerHTML = "Small";
+          document.querySelector("#pizzaSize").innerHTML = "Small";
           break;
         case "2":
           newWidth = 33.3;
-          //document.querySelector("#pizzaSize").innerHTML = "Medium";
+          document.querySelector("#pizzaSize").innerHTML = "Medium";
           break;
         case "3":
           newWidth = 50;
-          //document.querySelector("#pizzaSize").innerHTML = "Large";
+          document.querySelector("#pizzaSize").innerHTML = "Large";
           break;
         default:
           console.log("bug in sizeSwitcher");
       }
       var i = 0;
-      var randomPizzas = document.getElementsByClassName('randomPizzaContainer'); 
+      var randomPizzas = document.getElementsByClassName('randomPizzaContainer');
+      var pizzaLength = randomPizzas.length;
 
-      for (; i < randomPizzas.length; i++) {
+      for (; i < pizzaLength; i++) {
         randomPizzas[i].style.width = newWidth + "%";
       }
     }
@@ -498,16 +499,17 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover'); 
   var i = 0;
   var itemslength = items.length;
-  var scrollpos = document.body.scrollTop;
+  var scrollPosition = document.body.scrollTop;
+  
   //var phase = Math.sin((document.body.scrollTop /1250) + (i % 5));
   
 for (; i < itemslength; i++) {
-    var phase = Math.sin((scrollpos / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-    //i++;
-    //phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+      var phase = Math.sin((scrollPosition / 1250) + (i % 5));
+      var pizzaShift = ((items[i].basicLeft + 100 * phase) - 1024) + 'px';
+      items[i].style.transform = 'translateX(' + pizzaShift + ')';
 
   }
+  
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.

@@ -27,6 +27,7 @@ form {
 
 #pizzaSize {
   font-weight: 800;
+  will-change: transform;
 }
 
 .mover {
@@ -49,4 +50,5 @@ form {
 
  .container {
   background-color: rgba(240, 60, 60, 0.8);
+
 }
