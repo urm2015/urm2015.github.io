@@ -480,11 +480,16 @@ function updatePositions() {
 
   var items = document.querySelectorAll('.mover'); 
   var i = 0;
-  //var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+  var itemslength = items.length;
+  var scrollpos = document.body.scrollTop;
+  var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
 
-for (; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+for (; i < itemslength;) {
+    //var phase = Math.sin((scrollpos / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    i++;
+    phase = Math.sin((scrollpos / 1250) + (i % 5));
+
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -504,7 +509,10 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 24; i++) {
+  //var i = 0;
+  //var elem = document.createElement('img');
+  
+  for (var i=0; i < 25; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
