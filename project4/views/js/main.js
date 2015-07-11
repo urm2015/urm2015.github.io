@@ -482,7 +482,7 @@ function updatePositions() {
   var i = 0;
   var itemslength = items.length;
   var scrollpos = document.body.scrollTop;
-  var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+  var phase = Math.sin((scrollpos / 1250) + (i % 5));
 
 for (; i < itemslength;) {
     //var phase = Math.sin((scrollpos / 1250) + (i % 5));
