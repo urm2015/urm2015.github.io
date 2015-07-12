@@ -499,15 +499,18 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover'); 
   var i = 0;
   var itemslength = items.length;
-  var scrollPosition = document.body.scrollTop;
+  var scrollPosition = (document.body.scrollTop / 1250);
   
-  //var phase = Math.sin((document.body.scrollTop /1250) + (i % 5));
+
+for (; i < itemslength; i++) {
+  items[i].phaseLeft = Math.sin(scrollPosition  + (i % 5));
+  items[i].scrollMove = ((items[i].basicLeft + 100 * items[i].phaseLeft) - 1024);
+}
+
+i=0;
   
 for (; i < itemslength; i++) {
-      var phase = Math.sin((scrollPosition / 1250) + (i % 5));
-      var pizzaShift = ((items[i].basicLeft + 100 * phase) - 1024) + 'px';
-      items[i].style.transform = 'translateX(' + pizzaShift + ')';
-
+      items[i].style.transform = 'translateX(' + items[i].scrollMove + 'px' + ')';
   }
   
 
@@ -529,6 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var i = 0;
+  var scrollPosition = document.body.scrollTop;
   
   for (; i < 25; i++) {
     var elem = document.createElement('img');
@@ -538,6 +542,8 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    elem.phaseLeft = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    elem.scrollMove = 0;
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
   updatePositions();
