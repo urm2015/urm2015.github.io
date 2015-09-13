@@ -28,6 +28,12 @@ var initialLocations = [
     position: new google.maps.LatLng(29.4306927, -98.4886484),
     redIcon: iconURLPrefixRed,
     greenIcon: iconURLPrefixGreen,
+    visible: true,
+    marker: new google.maps.Marker({
+          position: new google.maps.LatLng(29.4306927, -98.4886484),
+          map: map,
+          icon: iconURLPrefixRed,
+        }),
     yelpinfo: yelpinfo
   },
   {
@@ -37,6 +43,12 @@ var initialLocations = [
     position: new google.maps.LatLng(29.4261784, -98.4889309),
     redIcon: iconURLPrefixRed,
     greenIcon: iconURLPrefixGreen,
+    visible: true,
+    marker: new google.maps.Marker({
+          position: new google.maps.LatLng(29.4261784, -98.4889309),
+          map: map,
+          icon: iconURLPrefixRed,
+        })
   },
   {
     name : 'The Majestic Theater',
@@ -45,6 +57,12 @@ var initialLocations = [
     position: new google.maps.LatLng(29.42616, -98.4905833),
     redIcon: iconURLPrefixRed,
     greenIcon: iconURLPrefixGreen,
+    visible: true,
+    marker: new google.maps.Marker({
+          position: new google.maps.LatLng(29.42616, -98.4905833),
+          map: map,
+          icon: iconURLPrefixRed,
+        })
   },
   {
     name : 'The Alamo',
@@ -53,6 +71,12 @@ var initialLocations = [
     position: new google.maps.LatLng(29.4259671, -98.4861419),
     redIcon: iconURLPrefixRed,
     greenIcon: iconURLPrefixGreen,
+    visible: true,
+    marker: new google.maps.Marker({
+          position: new google.maps.LatLng(29.4259671, -98.4861419),
+          map: map,
+          icon: iconURLPrefixRed,
+        }) 
   },
   {
     name : 'The Menger Hotel',
@@ -61,6 +85,12 @@ var initialLocations = [
     position: new google.maps.LatLng(29.4248426, -98.486367),
     redIcon: iconURLPrefixRed,
     greenIcon: iconURLPrefixGreen,
+    visible: true,
+    marker: new google.maps.Marker({
+          position: new google.maps.LatLng(29.4248426, -98.486367),
+          map: map,
+          icon: iconURLPrefixRed,
+        })
   }];
     
   var Location = function(data) {
@@ -71,6 +101,8 @@ var initialLocations = [
   this.position= ko.observable(data.position);
   this.redIcon= ko.observable(data.redIcon);
   this.greenIcon= ko.observable(data.greenIcon);
+  this.visible= ko.observable(data.visible);
+  this.marker= ko.observable(data.marker);
 };
 
 
@@ -86,7 +118,6 @@ var ViewModel = function() {
 
     this.locations = ko.observableArray([]);
 
-    this.markers = ko.observableArray([]);
     this.filter = ko.observable('');
 
 //add elements to locations
@@ -97,27 +128,28 @@ var ViewModel = function() {
 //create markers and add click event
     
     
+    self.locations().forEach(function(place){
     
-    for (var i = 0; i < this.locations().length; i++) {  
-    
-        var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(this.locations()[i].lat, this.locations()[i].long),
-          map: map,
-        }); 
-      
-      
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(this.locations()[i].name + " " +this.locations()[i].lat);
-          infowindow.open(map, marker);
-        }
-      })(marker, i)); 
+      marker = place.marker();
 
-    };
+      google.maps.event.addListener(marker, 'click', (function(marker, place) {
+        return function() {
+          infowindow.setContent(place.name() + " " +place.lat());
+          infowindow.open(map, place.marker());
+        }
+      })(place.marker(), place)); 
+
+    });
     
 //search and filter the list
 
     self.query = ko.observable('');
+
+  this.setMarker = function(){
+    for (var i = 0; i < self.locations().length; i++){
+      self.locations()[i].setVisible(true);
+    }
+  }; 
 
     self.search = ko.computed(function(){
       return ko.utils.arrayFilter(self.locations(), function(place){
