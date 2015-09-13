@@ -152,13 +152,13 @@ var ViewModel = function() {
     self.search = ko.computed(function(){
       self.setMarker();
       return ko.utils.arrayFilter(self.locations(), function(place){
-        for (var i = 0; i < self.locations().length; i++){
-          if (self.locations()[i].name().toLowerCase().indexOf(self.query().toLowerCase()) >=0){
-            self.locations()[i].marker().setVisible(true);
+        self.locations().forEach(function(point){
+          if (point.name().toLowerCase().indexOf(self.query().toLowerCase()) >=0){
+              point.marker().setVisible(true);
           } else { 
-            self.locations()[i].marker().setVisible(false);
-          }
-        }
+              point.marker().setVisible(false);
+            }
+          })    
         return place.name().toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
       });
     });
