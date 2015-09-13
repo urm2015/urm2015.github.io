@@ -118,14 +118,12 @@ var ViewModel = function() {
 
     this.locations = ko.observableArray([]);
 
-    this.filter = ko.observable('');
-
-//add elements to locations
+//add elements to locations array
     initialLocations.forEach(function(place){
       self.locations().push(new Location(place));
     });
 
-//create markers and add click event
+//add click event to marker and info window
     
     
     self.locations().forEach(function(place){
@@ -141,18 +139,26 @@ var ViewModel = function() {
 
     });
     
-//search and filter the list
+//search and filter the list and markers
 
     self.query = ko.observable('');
 
   this.setMarker = function(){
     for (var i = 0; i < self.locations().length; i++){
-      self.locations()[i].setVisible(true);
+      self.locations()[i].marker().setVisible(true);
     }
   }; 
 
     self.search = ko.computed(function(){
+      self.setMarker();
       return ko.utils.arrayFilter(self.locations(), function(place){
+        for (var i = 0; i < self.locations().length; i++){
+          if (self.locations()[i].name().toLowerCase().indexOf(self.query().toLowerCase()) >=0){
+            self.locations()[i].marker().setVisible(true);
+          } else { 
+            self.locations()[i].marker().setVisible(false);
+          }
+        }
         return place.name().toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
       });
     });
