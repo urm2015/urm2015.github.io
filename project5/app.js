@@ -155,8 +155,10 @@ var ViewModel = function() {
         self.locations().forEach(function(point){
           if (point.name().toLowerCase().indexOf(self.query().toLowerCase()) >=0){
               point.marker().setVisible(true);
+              infowindow.close(map, point.marker());
           } else { 
               point.marker().setVisible(false);
+              infowindow.close(map, point.marker());
             }
           })    
         return place.name().toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
