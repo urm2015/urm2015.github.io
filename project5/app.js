@@ -15,8 +15,6 @@ var map = new google.maps.Map(document.getElementById('map'), {
     });
 var iconURLPrefixRed = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
-var iconURLPrefixGreen = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-
 var yelpinfo = 'http://api.yelp.com/v2/search?term=The+Tobin+Center';
 
   // Define locations as an Array
@@ -27,7 +25,6 @@ var initialLocations = [
     long : '-98.4886484',
     position: new google.maps.LatLng(29.4306927, -98.4886484),
     redIcon: iconURLPrefixRed,
-    greenIcon: iconURLPrefixGreen,
     visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4306927, -98.4886484),
@@ -42,7 +39,6 @@ var initialLocations = [
     long : '-98.4889309',
     position: new google.maps.LatLng(29.4261784, -98.4889309),
     redIcon: iconURLPrefixRed,
-    greenIcon: iconURLPrefixGreen,
     visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4261784, -98.4889309),
@@ -56,7 +52,6 @@ var initialLocations = [
     long : '-98.4905833',
     position: new google.maps.LatLng(29.42616, -98.4905833),
     redIcon: iconURLPrefixRed,
-    greenIcon: iconURLPrefixGreen,
     visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.42616, -98.4905833),
@@ -70,7 +65,6 @@ var initialLocations = [
     long : '-98.4861419',
     position: new google.maps.LatLng(29.4259671, -98.4861419),
     redIcon: iconURLPrefixRed,
-    greenIcon: iconURLPrefixGreen,
     visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4259671, -98.4861419),
@@ -84,7 +78,6 @@ var initialLocations = [
     long : '-98.4887071',
     position: new google.maps.LatLng(29.4248426, -98.486367),
     redIcon: iconURLPrefixRed,
-    greenIcon: iconURLPrefixGreen,
     visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4248426, -98.486367),
@@ -100,7 +93,6 @@ var initialLocations = [
   this.long= ko.observable(data.long);
   this.position= ko.observable(data.position);
   this.redIcon= ko.observable(data.redIcon);
-  this.greenIcon= ko.observable(data.greenIcon);
   this.visible= ko.observable(data.visible);
   this.marker= ko.observable(data.marker);
 };
@@ -123,34 +115,50 @@ var ViewModel = function() {
       self.locations().push(new Location(place));
     });
 
+//set marker animation to false
+
+  this.animateFalse = function(){
+      self.locations().forEach(function(point){
+        point.marker().setAnimation(false);
+      });
+    };
+
 //add click event to marker and info window
-    
-    
+
+  this.addClick = function(){  
     self.locations().forEach(function(place){
     
       marker = place.marker();
 
       google.maps.event.addListener(marker, 'click', (function(marker, place) {
         return function() {
+          self.animateFalse();
           infowindow.setContent(place.name() + " " +place.lat());
           infowindow.open(map, place.marker());
+          place.marker().setAnimation(google.maps.Animation.BOUNCE);
         }
-      })(place.marker(), place)); 
+      })(marker, place)); 
 
     });
-    
+  };
+  self.addClick();
+
+//set all markers visible
+
+  this.setMarker = function(){
+      self.locations().forEach(function(point){
+      point.marker().setVisible(true);
+    })
+  }; 
+
+
 //search and filter the list and markers
 
     self.query = ko.observable('');
 
-  this.setMarker = function(){
-    for (var i = 0; i < self.locations().length; i++){
-      self.locations()[i].marker().setVisible(true);
-    }
-  }; 
-
     self.search = ko.computed(function(){
       self.setMarker();
+      self.animateFalse();
       return ko.utils.arrayFilter(self.locations(), function(place){
         self.locations().forEach(function(point){
           if (point.name().toLowerCase().indexOf(self.query().toLowerCase()) >=0){
