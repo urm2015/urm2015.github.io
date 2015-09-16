@@ -1,4 +1,4 @@
-//Model Section********
+//**********Model Section********
 
 //Setup Map
 
@@ -23,9 +23,6 @@ var initialLocations = [
     name : 'Tobin Center',
     lat : '29.4306927',
     long : '-98.4886484',
-    position: new google.maps.LatLng(29.4306927, -98.4886484),
-    redIcon: iconURLPrefixRed,
-    visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4306927, -98.4886484),
           map: map,
@@ -37,9 +34,6 @@ var initialLocations = [
     name : 'The Buckhorn',
     lat : '29.4261784',
     long : '-98.4889309',
-    position: new google.maps.LatLng(29.4261784, -98.4889309),
-    redIcon: iconURLPrefixRed,
-    visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4261784, -98.4889309),
           map: map,
@@ -50,9 +44,6 @@ var initialLocations = [
     name : 'The Majestic Theater',
     lat : '29.42616',
     long : '-98.4905833',
-    position: new google.maps.LatLng(29.42616, -98.4905833),
-    redIcon: iconURLPrefixRed,
-    visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.42616, -98.4905833),
           map: map,
@@ -63,9 +54,6 @@ var initialLocations = [
     name : 'The Alamo',
     lat : '29.4259671',
     long : '-98.4861419',
-    position: new google.maps.LatLng(29.4259671, -98.4861419),
-    redIcon: iconURLPrefixRed,
-    visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4259671, -98.4861419),
           map: map,
@@ -76,9 +64,6 @@ var initialLocations = [
     name : 'The Menger Hotel',
     lat : '29.4268198',
     long : '-98.4887071',
-    position: new google.maps.LatLng(29.4248426, -98.486367),
-    redIcon: iconURLPrefixRed,
-    visible: true,
     marker: new google.maps.Marker({
           position: new google.maps.LatLng(29.4248426, -98.486367),
           map: map,
@@ -91,14 +76,11 @@ var initialLocations = [
   this.name= ko.observable(data.name);
   this.lat= ko.observable(data.lat);
   this.long= ko.observable(data.long);
-  this.position= ko.observable(data.position);
-  this.redIcon= ko.observable(data.redIcon);
-  this.visible= ko.observable(data.visible);
   this.marker= ko.observable(data.marker);
 };
 
 
-//ViewModel Section********
+//*********ViewModel Section********
 
 var ViewModel = function() {
     var self = this;
@@ -106,16 +88,16 @@ var ViewModel = function() {
       maxWidth: 120
       });
 
-//make locations an observable array
+//Make locations an observable array
 
     this.locations = ko.observableArray([]);
 
-//add elements to locations array
+//Add elements to locations array
     initialLocations.forEach(function(place){
       self.locations().push(new Location(place));
     });
 
-//set marker animation to false
+//Set marker animation to false
 
   this.animateFalse = function(){
       self.locations().forEach(function(point){
@@ -123,7 +105,7 @@ var ViewModel = function() {
       });
     };
 
-//add click event to marker and info window
+//Add click event to marker and info window
 
   this.addClick = function(){  
     self.locations().forEach(function(place){
@@ -143,7 +125,7 @@ var ViewModel = function() {
   };
   self.addClick();
 
-//set all markers visible
+//Set all markers visible
 
   this.setMarker = function(){
       self.locations().forEach(function(point){
@@ -152,7 +134,7 @@ var ViewModel = function() {
   }; 
 
 
-//search and filter the list and markers
+//Search and filter the list and markers
 
     self.query = ko.observable('');
 
