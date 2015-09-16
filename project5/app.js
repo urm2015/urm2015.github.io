@@ -93,9 +93,13 @@ var ViewModel = function() {
     this.locations = ko.observableArray([]);
 
 //Add elements to locations array
+  this.addElements= function(){
     initialLocations.forEach(function(place){
       self.locations().push(new Location(place));
     });
+  };
+
+  self.addElements();
 
 //Set marker animation to false
 
@@ -135,7 +139,8 @@ var ViewModel = function() {
 
 
 //Search and filter the list and markers
-
+  
+  this.searchFilter = function(){
     self.query = ko.observable('');
 
     self.search = ko.computed(function(){
@@ -154,6 +159,9 @@ var ViewModel = function() {
         return place.name().toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
       });
     });
+  };
+
+  self.searchFilter();
 };
 
 ko.applyBindings(new ViewModel())
