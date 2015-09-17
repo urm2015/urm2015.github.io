@@ -15,8 +15,6 @@ var map = new google.maps.Map(document.getElementById('map'), {
     });
 var iconURLPrefixRed = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
-var yelpinfo = 'http://api.yelp.com/v2/search?term=The+Tobin+Center';
-
   // Define locations as an Array
 var initialLocations = [
   {
@@ -28,7 +26,6 @@ var initialLocations = [
           map: map,
           icon: iconURLPrefixRed,
         }),
-    yelpinfo: yelpinfo
   },
   {
     name : 'The Buckhorn',
@@ -123,8 +120,7 @@ var ViewModel = function() {
           infowindow.open(map, place.marker());
           place.marker().setAnimation(google.maps.Animation.BOUNCE);
         }
-      })(marker, place)); 
-
+      })(marker, place));
     });
   };
   self.addClick();
@@ -137,7 +133,23 @@ var ViewModel = function() {
     })
   }; 
 
+//Set list view to be clicakble
 
+this.currentMarker = ko.observable( this.locations()[0] );
+
+this.setClickedMarker = function(clickedMarker) {
+  self.currentMarker(clickedMarker);
+
+  var name = this.name();
+  var marker = this.marker();
+
+  self.animateFalse();
+  infowindow.setContent(name);
+  infowindow.open(map, marker);
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+};
+
+//////////////
 //Search and filter the list and markers
   
   this.searchFilter = function(){
@@ -162,6 +174,36 @@ var ViewModel = function() {
   };
 
   self.searchFilter();
+
+ /////////////////////////
+ /*
+  this.wikiData = function(){
+      
+
+var MengerUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Menger Hotel';
+var mengerid = '315875'
+
+    var wikiRequestTimeout = setTimeout(function(){
+        $wikiElem.text("failed to get wikipedia resources");
+    }, 8000);
+
+    $.ajax({
+        url: MengerUrl,
+        datatype: "jsonp"
+      });
+        success: function( response ) {
+            var mengerid = response.pageid;
+
+                var content = 'http://en.wikipedia.org/?curid=' + mengerid;
+                infowindow.setContent(place.name() + " " + content);
+            };
+
+            clearTimeout(wikiRequestTimeout);
+        }
+    });
+  } 
+*/
+////////////////////////////
 };
 
 ko.applyBindings(new ViewModel())
