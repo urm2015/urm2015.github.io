@@ -21,6 +21,7 @@ var initialLocations = [
     name : 'Tobin Center',
     title : 'Tobin Center for the Performing Arts',
     apiLink : '1',
+    extract : 'The 2100 seat venue was first built in 1926 as the San Antonio Municipal Auditorium ',
     lat : '29.4306927',
     long : '-98.4886484',
     marker: new google.maps.Marker({
@@ -33,6 +34,7 @@ var initialLocations = [
     name : 'The Buckhorn',
     title : 'Buckhorn_Saloon_%26_Museum',
     apiLink : '1',
+    extract : 'The museum was established in 1997',
     lat : '29.4261784',
     long : '-98.4889309',
     marker: new google.maps.Marker({
@@ -45,6 +47,7 @@ var initialLocations = [
     name : 'The Majestic Theater',
     title: 'Majestic Theatre (San Antonio)',
     apiLink : '1',
+    extract : 'The theatre seats 2,311 people and was built in 1929',
     lat : '29.42616',
     long : '-98.4905833',
     marker: new google.maps.Marker({
@@ -57,6 +60,7 @@ var initialLocations = [
     name : 'The Alamo',
     title: 'Alamo Mission in San Antonio',
     apiLink : '1',
+    extract : 'Founded in the eighteenth century as a Roman Catholic mission',
     lat : '29.4259671',
     long : '-98.4861419',
     marker: new google.maps.Marker({
@@ -69,6 +73,7 @@ var initialLocations = [
     name : 'The Menger Hotel',
     title : 'Menger Hotel',
     apiLink : '1',
+    extract : 'The hotel was built in 1859',
     lat : '29.4268198',
     long : '-98.4887071',
     marker: new google.maps.Marker({
@@ -83,6 +88,7 @@ var initialLocations = [
   this.name= ko.observable(data.name);
   this.title= ko.observable(data.title);
   this.apiLink= ko.observable(data.apiLink);
+  this.extract= ko.observable(data.extract);
   this.lat= ko.observable(data.lat);
   this.long= ko.observable(data.long);
   this.marker= ko.observable(data.marker);
@@ -136,11 +142,8 @@ this.wikiData = function(){
         url: titleUrl,
         dataType: "jsonp",
         success: function( response ) {
-            var titleid = Object.keys(response.query.pages)[0];
-            //var extractid = response.query.pages.titleid.extract;             
+            var titleid = Object.keys(response.query.pages)[0];           
                 point.apiLink = 'http://en.wikipedia.org/?curid=' + titleid;
-            //    point.extract = extractid;
-            //    console.log(extractid);
             },
 
             
@@ -162,7 +165,7 @@ this.wikiData = function(){
       google.maps.event.addListener(marker, 'click', (function(marker, place) {
         return function() {
           self.animateFalse();
-          infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() +"<br />");
+          infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() + '</a>' +"<br />" + place.extract());
           infowindow.open(map, place.marker());
           place.marker().setAnimation(google.maps.Animation.BOUNCE);
         }
@@ -189,9 +192,10 @@ this.setClickedMarker = function(clickedMarker) {
   var name = this.name();
   var apiLink = this.apiLink;
   var marker = this.marker();
+  var extract = this.extract();
 
   self.animateFalse();
-  infowindow.setContent('<a href="' + apiLink + '">' +  name);
+  infowindow.setContent('<a href="' + apiLink + '">' +  name + '</a>' +"<br />" + extract);
   infowindow.open(map, marker);
   marker.setAnimation(google.maps.Animation.BOUNCE);
 };
