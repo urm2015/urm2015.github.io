@@ -20,7 +20,7 @@ var initialLocations = [
   {
     name : 'Tobin Center',
     title : 'Tobin Center for the Performing Arts',
-    api : "",
+    apiLink : '1',
     lat : '29.4306927',
     long : '-98.4886484',
     marker: new google.maps.Marker({
@@ -32,7 +32,7 @@ var initialLocations = [
   {
     name : 'The Buckhorn',
     title : 'Buckhorn_Saloon_%26_Museum',
-    api : "",
+    apiLink : '1',
     lat : '29.4261784',
     long : '-98.4889309',
     marker: new google.maps.Marker({
@@ -44,7 +44,7 @@ var initialLocations = [
   {
     name : 'The Majestic Theater',
     title: 'Majestic Theatre (San Antonio)',
-    api : "",
+    apiLink : '1',
     lat : '29.42616',
     long : '-98.4905833',
     marker: new google.maps.Marker({
@@ -56,7 +56,7 @@ var initialLocations = [
   {
     name : 'The Alamo',
     title: 'Alamo Mission in San Antonio',
-    api : "",
+    apiLink : '1',
     lat : '29.4259671',
     long : '-98.4861419',
     marker: new google.maps.Marker({
@@ -68,7 +68,7 @@ var initialLocations = [
   {
     name : 'The Menger Hotel',
     title : 'Menger Hotel',
-    api : "",
+    apiLink : '1',
     lat : '29.4268198',
     long : '-98.4887071',
     marker: new google.maps.Marker({
@@ -82,7 +82,7 @@ var initialLocations = [
   var self = this;
   this.name= ko.observable(data.name);
   this.title= ko.observable(data.title);
-  this.api= ko.observable(data.api);
+  this.apiLink= ko.observable(data.apiLink);
   this.lat= ko.observable(data.lat);
   this.long= ko.observable(data.long);
   this.marker= ko.observable(data.marker);
@@ -118,7 +118,7 @@ var ViewModel = function() {
       });
     };
 
-//////////
+//Make wikipedia api call and store it in apiLink 
 
 this.wikiData = function(){
 
@@ -128,28 +128,29 @@ this.wikiData = function(){
 
     var titleUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=' + title;
 
-    //var wikiRequestTimeout = setTimeout(function(){
-      //  $wikiElem.text("failed to get wikipedia resources");
-    //}, 8000);
+    var wikiRequestTimeout = setTimeout(function(){
+        infowindow.setContent("failed to get wikipedia resources");
+    }, 8000);
 
     $.ajax({
         url: titleUrl,
         dataType: "jsonp",
         success: function( response ) {
-            var titleid = response.query.pages;             
-                point.api = 'http://en.wikipedia.org/?curid=' + titleid.pageid;
-                console.log(response);
-                console.log(response.query.pages);
-            }
+            var titleid = Object.keys(response.query.pages)[0];
+            //var extractid = response.query.pages.titleid.extract;             
+                point.apiLink = 'http://en.wikipedia.org/?curid=' + titleid;
+            //    point.extract = extractid;
+            //    console.log(extractid);
+            },
 
-            //clearTimeout(wikiRequestTimeout)
-    });
+            
+      });
+      clearTimeout(wikiRequestTimeout);
     });  
   };
     self.wikiData();
-    console.log(this.locations());
 
-///////////////////
+
 
 //Add click event to marker and info window
 
@@ -161,7 +162,7 @@ this.wikiData = function(){
       google.maps.event.addListener(marker, 'click', (function(marker, place) {
         return function() {
           self.animateFalse();
-          infowindow.setContent(place.name()+"<br />" +place.api());
+          infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() +"<br />");
           infowindow.open(map, place.marker());
           place.marker().setAnimation(google.maps.Animation.BOUNCE);
         }
@@ -186,15 +187,15 @@ this.setClickedMarker = function(clickedMarker) {
   self.currentMarker(clickedMarker);
 
   var name = this.name();
+  var apiLink = this.apiLink;
   var marker = this.marker();
 
   self.animateFalse();
-  infowindow.setContent(name);
+  infowindow.setContent('<a href="' + apiLink + '">' +  name);
   infowindow.open(map, marker);
   marker.setAnimation(google.maps.Animation.BOUNCE);
 };
 
-//////////////
 //Search and filter the list and markers
   
   this.searchFilter = function(){
@@ -220,41 +221,6 @@ this.setClickedMarker = function(clickedMarker) {
 
   self.searchFilter();
 
- /////////////////////////
- /*
-  this.wikiData = function(){
-
-   self.locations().forEach(function(point){
-
-    var title = point.title();   
-
-    var titleUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=' + title;
-
-    //var wikiRequestTimeout = setTimeout(function(){
-      //  $wikiElem.text("failed to get wikipedia resources");
-    //}, 8000);
-
-    $.ajax({
-        url: titleUrl,
-        dataType: "jsonp",
-        success: function( response ) {
-            
-            var titleid = response.query.pages.pageid;
-
-                var content = 'http://en.wikipedia.org/?curid=' + titleid;
-                infowindow.setContent(content);
-                console.log(this);
-            }
-
-            //clearTimeout(wikiRequestTimeout)
-    });
-
-    });  
-  };
-    self.wikiData();
-   */
-
-////////////////////////////
 };
 
 ko.applyBindings(new ViewModel())
