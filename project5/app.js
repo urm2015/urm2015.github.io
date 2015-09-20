@@ -2,17 +2,32 @@
 
 //Setup Map
 
-var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 16,
+var mapOpt = {
+  zoom:16,
+  maxZoom:16,
+  minZoom:16,
+  center: new google.maps.LatLng(29.4268198, -984887071),
+  mapTypeId: google.maps.MapTypeId.ROADMAP,
+  mapTypeControl: false,
+  streetViewControl: false,
+  panControl: false,
+  draggable: false,
+}
+
+var map = new google.maps.Map(document.getElementById('map'), mapOpt);//{
+    /*zoom: 16,
+    maxZoom : 16,
+    minZoom : 16,
     center: new google.maps.LatLng(29.4268198, -98.4887071),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     mapTypeControl: false,
     streetViewControl: false,
     panControl: false,
-    zoomControlOptions: {
-         position: google.maps.ControlPosition.LEFT_BOTTOM
+    draggable: false,
+    //zoomControlOptions: {
+         //position: google.maps.ControlPosition.LEFT_BOTTOM
       }
-    });
+    });*/
 var iconURLPrefixRed = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
   // Define locations as an Array
@@ -199,6 +214,23 @@ this.setClickedMarker = function(clickedMarker) {
   infowindow.open(map, marker);
   marker.setAnimation(google.maps.Animation.BOUNCE);
 };
+
+this.autoCenter = function(data) {
+
+      //  Create a new viewpoint bound
+      var bounds = new google.maps.LatLngBounds();
+      //  Go through each...
+      self.locations().forEach(function(point){ 
+        bounds.extend(point.marker().position);
+      });
+      //  Fit these bounds to the map
+      map.fitBounds(bounds);
+    }
+    
+    self.autoCenter();
+
+
+    
 
 //Search and filter the list and markers
   
