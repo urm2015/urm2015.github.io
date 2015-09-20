@@ -14,20 +14,8 @@ var mapOpt = {
   draggable: false,
 }
 
-var map = new google.maps.Map(document.getElementById('map'), mapOpt);//{
-    /*zoom: 16,
-    maxZoom : 16,
-    minZoom : 16,
-    center: new google.maps.LatLng(29.4268198, -98.4887071),
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    mapTypeControl: false,
-    streetViewControl: false,
-    panControl: false,
-    draggable: false,
-    //zoomControlOptions: {
-         //position: google.maps.ControlPosition.LEFT_BOTTOM
-      }
-    });*/
+var map = new google.maps.Map(document.getElementById('map'), mapOpt);
+
 var iconURLPrefixRed = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
   // Define locations as an Array
@@ -166,7 +154,7 @@ this.wikiData = function(){
       clearTimeout(wikiRequestTimeout);
     });  
   };
-    self.wikiData();
+  self.wikiData();
 
 
 
@@ -215,19 +203,21 @@ this.setClickedMarker = function(clickedMarker) {
   marker.setAnimation(google.maps.Animation.BOUNCE);
 };
 
+//Center map on marker locations
+
 this.autoCenter = function(data) {
 
-      //  Create a new viewpoint bound
-      var bounds = new google.maps.LatLngBounds();
-      //  Go through each...
-      self.locations().forEach(function(point){ 
-        bounds.extend(point.marker().position);
-      });
-      //  Fit these bounds to the map
-      map.fitBounds(bounds);
-    }
+  //  Create a new viewpoint bound
+  var bounds = new google.maps.LatLngBounds();
+
+    self.locations().forEach(function(point){ 
+      bounds.extend(point.marker().position);
+    });
+    //  Fit these bounds to the map
+    map.fitBounds(bounds);
+};
     
-    self.autoCenter();
+self.autoCenter();
 
 
     
