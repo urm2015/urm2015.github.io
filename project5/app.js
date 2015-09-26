@@ -18,6 +18,7 @@ var mapOpt = {
 };
 var map = new google.maps.Map(document.getElementById('map'), mapOpt);
 var iconURLPrefixRed = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+var iconURLPrefixGreen = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
 
 // Define locations as an Array
 
@@ -156,15 +157,17 @@ var ViewModel = function() {
 
   //Add click event to marker and info window
 
-  this.addClick = function(){  
+  this.addClick = function(){
     self.locations().forEach(function(place){
       var marker = place.marker();
       google.maps.event.addListener(marker, 'click', (function(marker, place) {
         return function() {
+          place.marker().icon = iconURLPrefixRed;
           self.animateFalse();
           infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() + '</a>' +"<br />" + place.extract());
           infowindow.open(map, place.marker());
           place.marker().setAnimation(google.maps.Animation.BOUNCE);
+          place.marker().icon = iconURLPrefixGreen;
         }
       })(marker, place));
     });
@@ -172,11 +175,27 @@ var ViewModel = function() {
 
   self.addClick();
 
+  //Return marker to original state when info window closes
+  this.clickClose = function(){
+    self.locations().forEach(function(place){
+      marker = place.marker();
+      google.maps.event.addListener(infowindow, 'closeclick', (function(marker, place) {
+       return function() {
+        place.marker().icon = iconURLPrefixRed;
+        self.animateFalse();
+       }
+      })(marker, place));
+    });
+  };
+
+  self.clickClose();
+
   //Set all markers visible
 
   this.setMarker = function(){
     self.locations().forEach(function(point){
     point.marker().setVisible(true);
+    point.marker().icon = iconURLPrefixRed;
     });
   };
 
@@ -192,6 +211,7 @@ var ViewModel = function() {
     self.animateFalse();
     infowindow.setContent('<a href="' + apiLink + '">' +  name + '</a>' +"<br />" + extract);
     infowindow.open(map, marker);
+    marker.icon = iconURLPrefixGreen;
     marker.setAnimation(google.maps.Animation.BOUNCE);
   };
 
