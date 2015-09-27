@@ -155,25 +155,40 @@ var ViewModel = function() {
 
   self.wikiData();
 
-  //Add click event to marker and info window
+  //Add click event and info window to marker
 
   this.addClick = function(){
     self.locations().forEach(function(place){
       var marker = place.marker();
       google.maps.event.addListener(marker, 'click', (function(marker, place) {
         return function() {
-          place.marker().icon = iconURLPrefixRed;
-          self.animateFalse();
-          infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() + '</a>' +"<br />" + place.extract());
-          infowindow.open(map, place.marker());
-          place.marker().setAnimation(google.maps.Animation.BOUNCE);
-          place.marker().icon = iconURLPrefixGreen;
+          if (place.marker().icon == iconURLPrefixGreen) {
+            self.allMarkersRed();
+            self.animateFalse();
+            place.marker().icon = iconURLPrefixRed;
+            infowindow.close(map,place.marker());
+          } else {
+              self.allMarkersRed();
+              place.marker().icon = iconURLPrefixRed;
+              self.animateFalse();
+              infowindow.setContent('<a href="' + place.apiLink + '">' +  place.name() + '</a>' +"<br />" + place.extract());
+              infowindow.open(map, place.marker());
+              place.marker().setAnimation(google.maps.Animation.BOUNCE);
+              place.marker().icon = iconURLPrefixGreen;
+            }
         }
       })(marker, place));
     });
   };
 
   self.addClick();
+
+  //Resets all markers to red
+  this.allMarkersRed = function(){
+    self.locations().forEach(function(point){
+      point.marker().icon = iconURLPrefixRed;
+    });
+  };
 
   //Return marker to original state when info window closes
   this.clickClose = function(){
@@ -208,11 +223,19 @@ var ViewModel = function() {
     var apiLink = this.apiLink;
     var marker = this.marker();
     var extract = this.extract();
-    self.animateFalse();
-    infowindow.setContent('<a href="' + apiLink + '">' +  name + '</a>' +"<br />" + extract);
-    infowindow.open(map, marker);
-    marker.icon = iconURLPrefixGreen;
-    marker.setAnimation(google.maps.Animation.BOUNCE);
+    if (marker.icon == iconURLPrefixGreen) {
+      self.allMarkersRed();
+      self.animateFalse();
+      marker.icon = iconURLPrefixRed;
+      infowindow.close(map,marker);
+    } else {
+      self.allMarkersRed();
+      self.animateFalse();
+      infowindow.setContent('<a href="' + apiLink + '">' +  name + '</a>' +"<br />" + extract);
+      infowindow.open(map, marker);
+      marker.icon = iconURLPrefixGreen;
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
   };
 
   //Center map on marker locations
