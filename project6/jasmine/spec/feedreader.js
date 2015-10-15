@@ -60,39 +60,31 @@ $(function() {
     //This suite tests the menu functionality.
 
     describe('The menu', function() {
-        var $body = $('body');
-            $menuIconLink = $('.menu-icon-link');
-            $menu = $('.menu');
+        var body = $('body');
+        var menuIconLink = $('.menu-icon-link');
+        var menu = $('.menu');
 
         //This checks to see that the x value of the menu is less than 0.
         //This means the menu is off the screen.
 
-        it('is off the screen initially', function(){
-            expect($menu.offset().left).toBeLessThan(0);
+        it('is off the screen initially', function() {
+            expect(menu.offset().left).toBeLessThan(0);
         });
 
-        //This test checks to make sure that the x value for the menu is greater than or
-        //equal to 0, by triggering a click event then checking the x value of the menu.
-        // This means the menu is on the screen.
+        //This test checks to make sure that the menu-hidden class is false after 
+        //triggering a click event. This tells us the menu is not hidden.
 
-        it('moves on the screen when clicked', function(done) {
-            $menuIconLink.trigger('click');
-            window.setTimeout(function() {
-                expect($menu.offset().left).not.toBeLessThan(0);
-                done();
-            }, 500);
+        it('moves on the screen when clicked', function() {
+            menuIconLink.click();
+            expect(body.hasClass('menu-hidden')).toBeFalsy();
         });
 
-        //This test checks to make sure that the x value for the menu is less than 0,
-        // by triggering a click event then checking the x value of the menu.
-        //This means the menu is off the screen.
+        //This test checks to make sure that the menu-hidden class is true after
+        //triggering a click event. This tells us the menu is once again hidden.
 
-        it('moves off the screen when clicked', function(done) {
-            $menuIconLink.trigger('click');
-            window.setTimeout(function() {
-                expect($menu.offset().left).toBeLessThan(0);
-                done();
-            }, 500);
+        it('moves off the screen when clicked', function() {
+            menuIconLink.click();
+            expect(body.hasClass('menu-hidden')).toBeTruthy();
         });
     });
 
@@ -139,7 +131,7 @@ $(function() {
        //previous header already loaded.
 
         it('header does not match old feed header', function() {
-                expect($("h1.header-title").html()).not.toBe(header0);
+            expect($("h1.header-title").html()).not.toBe(header0);
         });
 
         //This test checks to see that the new title loaded does not match the
